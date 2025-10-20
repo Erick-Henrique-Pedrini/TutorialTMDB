@@ -1,24 +1,18 @@
-  import { createRouter, createWebHistory } from 'vue-router';
-  import Home from '@/views/Home.vue';
-  
-  const routes = [
-    {
-      path: '/',
-      name: 'Home',
-      component: () => import('@/views/Home.vue'),
-    },
-    {
-      path: '/filmes',
-      name: 'Movies',
-      component: () => import('@/views/MoviesView.vue'),
-    },
-    {
-      path: '/tv',
-      name: 'TV',
-      component: () => import('@/views/TvViews.vue'),
-    },
-  ];
+import { createRouter, createWebHistory } from 'vue-router'
+import Home from '@/views/Home.vue'
+import MoviesView from '@/views/MoviesView.vue'
+import TvViews from '@/views/TvViews.vue'
+import TVDetailsView from '@/views/TVDetailsView.vue'
+import MovieDetailsView from '@/views/MovieDetailsView.vue'
 
+const routes = [
+  { path: '/', name: 'Home', component: Home },
+  { path: '/filmes', name: 'Movies', component: MoviesView },
+  { path: '/tv', name: 'TV', component: TvViews },
+  { path: '/movie/:movieId', name: 'MovieDetails', component: MovieDetailsView, props: true },
+  { path: '/tv/:tvId', name: 'TvDetails', component: TVDetailsView, props: true },
+];
+  
   const router = createRouter({
     history: createWebHistory(),
     routes,
