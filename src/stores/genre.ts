@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import api from '@/plugins/axios';
 
 export const useGenreStore = defineStore('genre', () => {
-
+  
 
   const genres = computed(() => state.genres);
   const getGenreName = (id : number) => {
@@ -19,7 +19,7 @@ export const useGenreStore = defineStore('genre', () => {
     genres: [] as { id: number; name: string }[],
     currentGenreId: null as number | null,
   });
-
+  
   const currentGenreId = computed(() => state.currentGenreId);
 
   const setCurrentGenreId = (genreId : number) => {

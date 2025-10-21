@@ -1,51 +1,38 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import api from '@/plugins/axios';
 import Loading from 'vue-loading-overlay';
 import { useGenreStore } from '@/stores/genre';
 import { useRouter } from 'vue-router';
+import { useTvStore } from '@/stores/tv';
 
 const router = useRouter();
-function openTvShow(tvId) {
-  router.push({ name: 'TvDetails', params: { tvId } });
-}
-
+const tvStore = useTvStore();
 const genreStore = useGenreStore();
-const isLoading = ref(false);
-const tvShows = ref([]);
 
-onMounted(async () => {
-  isLoading.value = true;
-  await genreStore.getAllGenres('tv'); // carrega os gêneros de séries
-  isLoading.value = false;
-});
-
-const listTvShows = async (genreId) => {
-  genreStore.setCurrentGenreId(genreId);
-  isLoading.value = true;
-  const response = await api.get('discover/tv', {
-    params: {
-      with_genres: genreId,
-      language: 'pt-BR',
-    },
-  });
-  tvShows.value = response.data.results;
-  isLoading.value = false;
+const openTvShow = (tvId: number) => {
+  router.push({ name: 'TvDetails', params: { tvId } });
 };
 
-const formatDate = (date) =>
-  new Date(date).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+onMounted(async () => {
+  tvStore.setLoading(true);
+  await genreStore.getAllGenres('tv');
+  tvStore.setLoading(false);
+});
+
+
 </script>
 
 <template>
-  <loading v-model:active="isLoading" is-full-page />
+  <loading v-model:active="tvStore.isLoading" is-full-page />
+
   <div>
     <h1>Programas de TV</h1>
     <ul class="genre-list">
       <li
         v-for="genre in genreStore.genres"
         :key="genre.id"
-        @click="listTvShows(genre.id)"
+        @click="tvStore.listTvShows(genre.id)"
         class="genre-item"
         :class="{ active: genre.id === genreStore.currentGenreId }"
       >
@@ -54,7 +41,7 @@ const formatDate = (date) =>
     </ul>
 
     <div class="movie-list">
-      <div v-for="tv in tvShows" :key="tv.id" class="movie-card">
+      <div v-for="tv in tvStore.tvShows" :key="tv.id" class="movie-card">
         <img
           :src="`https://image.tmdb.org/t/p/w500${tv.poster_path}`"
           :alt="tv.name"
@@ -63,14 +50,14 @@ const formatDate = (date) =>
         <div class="movie-details">
           <p class="movie-title">{{ tv.name }}</p>
           <p class="movie-release-date">
-            {{ formatDate(tv.first_air_date) }}
+            {{ tvStore.formatDate(tv.first_air_date) }}
           </p>
 
           <div class="movie-genres">
             <span
               v-for="genre_id in tv.genre_ids"
               :key="genre_id"
-              @click="listTvShows(genre_id)"
+              @click.stop="tvStore.listTvShows(genre_id)"
               :class="{ active: genre_id === genreStore.currentGenreId }"
             >
               {{ genreStore.getGenreName(genre_id) }}
