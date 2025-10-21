@@ -64,7 +64,7 @@ const isLoading = ref(false);
           <p class="movie-title">{{ movie.title }}</p>
           <p class="movie-release-date">{{ formatDate(movie.release_date) }}</p>
 
-          <!-- AGORA SIM: dentro do v-for de movie -->
+    
           <div class="movie-genres">
             <span
               v-for="genre_id in movie.genre_ids"
@@ -105,8 +105,10 @@ const isLoading = ref(false);
   background-color: #387250;
   border-radius: 1rem;
   padding: 0.5rem 1rem;
-  width: 5vw;
+  align-self: center;
   color: #fff;
+  display: flex;
+  justify-content: center;
 }
 
 .genre-item:hover {
