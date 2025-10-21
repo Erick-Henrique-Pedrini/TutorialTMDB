@@ -19,7 +19,7 @@ export const useGenreStore = defineStore('genre', () => {
     genres: [] as { id: number; name: string }[],
     currentGenreId: null as number | null,
   });
-
+  
   const currentGenreId = computed(() => state.currentGenreId);
 
   const setCurrentGenreId = (genreId : number) => {
